@@ -3,6 +3,8 @@ use super::recipe::Recipe;
 #[derive(Debug)]
 pub enum CreateError {
     InvalidData(String),
+    Unknown(String),
+    Conflict(String),
 }
 
 pub fn create_recipe<'a>(
