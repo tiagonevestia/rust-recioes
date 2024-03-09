@@ -39,23 +39,25 @@ pub fn create_recipe<'a>(
 
 #[cfg(test)]
 mod tests {
+    use crate::{
+        helpers::string_vec_to_vec_str,
+        tests::test_utils::shared::{stub_ingredients, stub_instructions, stub_tags, RECIPE_NAME},
+    };
+
     use super::create_recipe;
 
     #[test]
     fn should_create_the_expected_recipe() {
-        let tags = vec!["main", "chicken"];
-        let ingredients = vec!["10 grinds black pepper\r"];
-        let instructions = vec!["Cover the dish with plastic wrap and let marinate in the refrigerator for at least 30 minutes and up to 4 hours"];
+        let tags = stub_tags();
+        let tags = string_vec_to_vec_str(&tags);
+        let ingredients = stub_ingredients();
+        let ingredients = string_vec_to_vec_str(&ingredients);
+        let instructions = stub_instructions();
+        let instructions = string_vec_to_vec_str(&instructions);
 
-        let recipe = create_recipe(
-            "Oregano Marinated Chicken",
-            &tags,
-            &ingredients,
-            &instructions,
-        )
-        .unwrap();
+        let recipe = create_recipe(RECIPE_NAME, &tags, &ingredients, &instructions).unwrap();
 
-        assert_eq!(recipe.name().value(), "Oregano Marinated Chicken");
+        assert_eq!(recipe.name().value(), RECIPE_NAME);
         assert_eq!(recipe.tags.value().len(), tags.len());
         assert_eq!(recipe.ingredients.value().len(), ingredients.len());
         assert_eq!(recipe.instructions.value().len(), instructions.len());
