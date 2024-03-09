@@ -111,9 +111,9 @@ impl Recipe {
         Ok(Recipe {
             id: Some(Uuid::now_v7()),
             name: recipe_name,
+            tags: recipe_tags,
             ingredients: recipe_ingredients,
             instructions: recipe_instructions,
-            tags: recipe_tags,
             published_at: Some(Local::now()),
         })
     }
@@ -124,6 +124,14 @@ impl Recipe {
 
     pub fn tags(&self) -> &RecipeTags {
         &self.tags
+    }
+
+    pub fn ingredients(&self) -> &RecipeIngredients {
+        &self.ingredients
+    }
+
+    pub fn instructions(&self) -> &RecipeInstructions {
+        &self.instructions
     }
 }
 
