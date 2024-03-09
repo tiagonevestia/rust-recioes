@@ -5,6 +5,12 @@ use uuid::Uuid;
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct RecipeName(String);
 
+impl RecipeName {
+    pub fn value(&self) -> &String {
+        &self.0
+    }
+}
+
 impl TryFrom<String> for RecipeName {
     type Error = &'static str;
 
@@ -19,6 +25,12 @@ impl TryFrom<String> for RecipeName {
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct RecipeTags(Vec<String>);
+
+impl RecipeTags {
+    pub fn value(&self) -> &Vec<String> {
+        &self.0
+    }
+}
 
 impl TryFrom<Vec<String>> for RecipeTags {
     type Error = &'static str;
@@ -35,6 +47,12 @@ impl TryFrom<Vec<String>> for RecipeTags {
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct RecipeIngredients(Vec<String>);
 
+impl RecipeIngredients {
+    pub fn value(&self) -> &Vec<String> {
+        &self.0
+    }
+}
+
 impl TryFrom<Vec<String>> for RecipeIngredients {
     type Error = &'static str;
 
@@ -49,6 +67,12 @@ impl TryFrom<Vec<String>> for RecipeIngredients {
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct RecipeInstructions(Vec<String>);
+
+impl RecipeInstructions {
+    pub fn value(&self) -> &Vec<String> {
+        &self.0
+    }
+}
 
 impl TryFrom<Vec<String>> for RecipeInstructions {
     type Error = &'static str;
@@ -122,11 +146,11 @@ mod tests {
         )
         .unwrap();
 
-        assert_eq!(new_recipe.name.0, name);
+        assert_eq!(new_recipe.name.value(), name);
         assert_eq!(tags.len(), new_recipe.tags.0.len());
         assert_eq!(ingredients.len(), new_recipe.ingredients.0.len());
         for (i, exp_ins) in instructions.into_iter().enumerate() {
-            assert_eq!(exp_ins, new_recipe.instructions.0[i])
+            assert_eq!(exp_ins, new_recipe.instructions.value()[i])
         }
     }
 
