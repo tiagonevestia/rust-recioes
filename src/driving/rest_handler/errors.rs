@@ -23,9 +23,12 @@ impl Display for ApiError {
             | ApiError::InvalidData(err)
             | ApiError::Conflict(err)
             | ApiError::Unknown(err) => writeln!(f, "{},", err),
-            ApiError::ValidationError(mex_vec) => mex_vec.iter().fold(Ok(()), |result, err| {
-                result.and_then(|_| writeln!(f, "{}, ", err))
-            }),
+            ApiError::ValidationError(mex_vec) => {
+                for err in mex_vec {
+                    write!(f, "{}, ", err)?;
+                }
+                Ok(())
+            }
         }
     }
 }

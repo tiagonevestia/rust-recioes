@@ -10,5 +10,9 @@ actix-web = "4"
 chrono = { version = "0.4.35", features = ["serde"] }
 serde = { version = "1.0.197", features = ["derive"] }
 serde_json = "1.0.114"
-uuid = { version = "1.4.1", features = ["v7", "serde"] }
-validator = { version = "0.17", features = ["derive"] }
+validator = { version = "0.17.0", features = ["derive", "card", "unic"] }
+env_logger = "0.11.3"
+serde_qs = { version = "0.12.0", features = ["actix4"]}
+async-trait = "0.1.77"
+toml = "0.8.11"
+mongodb = "2.8.1"

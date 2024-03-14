@@ -1,6 +1,30 @@
 use chrono::{DateTime, Local};
 use serde::{Deserialize, Serialize};
-use uuid::Uuid;
+
+use super::Entity;
+
+impl Entity for Recipe {}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct RecipeId(Option<String>);
+
+impl RecipeId {
+    pub fn value(&self) -> &Option<String> {
+        &self.0
+    }
+}
+
+impl TryFrom<String> for RecipeId {
+    type Error = &'static str;
+
+    fn try_from(id: String) -> Result<Self, Self::Error> {
+        if id.is_empty() {
+            Ok(Self(None))
+        } else {
+            Ok(Self(Some(id)))
+        }
+    }
+}
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct RecipeName(String);
@@ -88,7 +112,7 @@ impl TryFrom<Vec<String>> for RecipeInstructions {
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct Recipe {
-    pub id: Option<Uuid>,
+    pub id: RecipeId,
     pub name: RecipeName,
     pub tags: RecipeTags,
     pub ingredients: RecipeIngredients,
@@ -98,24 +122,30 @@ pub struct Recipe {
 
 impl Recipe {
     pub fn new(
+        id: String,
         name: String,
         tags: Vec<String>,
         ingredients: Vec<String>,
         instructions: Vec<String>,
     ) -> Result<Self, String> {
+        let recipe_id = RecipeId::try_from(id)?;
         let recipe_name = RecipeName::try_from(name)?;
         let recipe_tags = RecipeTags::try_from(tags)?;
         let recipe_ingredients = RecipeIngredients::try_from(ingredients)?;
         let recipe_instructions = RecipeInstructions::try_from(instructions)?;
 
         Ok(Recipe {
-            id: Some(Uuid::now_v7()),
+            id: recipe_id,
             name: recipe_name,
             tags: recipe_tags,
             ingredients: recipe_ingredients,
             instructions: recipe_instructions,
             published_at: Some(Local::now()),
         })
+    }
+
+    pub fn id(&self) -> &RecipeId {
+        &self.id
     }
 
     pub fn name(&self) -> &RecipeName {
@@ -147,6 +177,7 @@ mod tests {
         let name: &str = "Oregano Marinated Chicken";
 
         let new_recipe = Recipe::new(
+            "10".to_string(),
             name.to_string(),
             tags.clone(),
             ingredients.clone(),
@@ -170,6 +201,7 @@ mod tests {
         let name = "Oregano Marinated Chicken";
 
         let err_recipe = Recipe::new(
+            "10".to_string(),
             "".to_string(),
             tags.clone(),
             ingredients.clone(),
@@ -179,6 +211,7 @@ mod tests {
         assert_eq!(err_recipe.unwrap_err(), "A receita precisa ter um nome");
 
         let err_recipe = Recipe::new(
+            "10".to_string(),
             name.to_string(),
             vec![],
             ingredients.clone(),
@@ -190,14 +223,26 @@ mod tests {
             "A receita precisa pelo menos de uma tag"
         );
 
-        let err_recipe = Recipe::new(name.to_string(), tags.clone(), vec![], instructions.clone());
+        let err_recipe = Recipe::new(
+            "10".to_string(),
+            name.to_string(),
+            tags.clone(),
+            vec![],
+            instructions.clone(),
+        );
         assert_eq!(err_recipe.is_err(), true);
         assert_eq!(
             err_recipe.unwrap_err(),
             "A receita precisa pelo menos de um ingrediente"
         );
 
-        let err_recipe = Recipe::new(name.to_string(), tags.clone(), ingredients.clone(), vec![]);
+        let err_recipe = Recipe::new(
+            "10".to_string(),
+            name.to_string(),
+            tags.clone(),
+            ingredients.clone(),
+            vec![],
+        );
         assert_eq!(err_recipe.is_err(), true);
         assert_eq!(
             err_recipe.unwrap_err(),

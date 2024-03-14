@@ -1,0 +1,26 @@
+POST http://0.0.0.0:8080/api/v1/recipes
+Content-Type: application/json
+
+{
+    "name": "Teste 2",
+    "tags": ["teste"],
+    "ingredients": ["teste"],
+    "instructions": ["teste"]
+}
+###
+
+GET http://0.0.0.0:8080/api/v1/recipes?name=Teste
+Content-Type: application/json
+
+
+###
+PATCH http://0.0.0.0:8080/api/v1/recipes
+Content-Type: application/json
+
+{
+    "id": "018e334a-bc65-709c-8ae6-db3e0210e1f4",
+    "name": "Teste 3",
+    "tags": ["teste3"],
+    "ingredients": ["teste3"],
+    "instructions": ["teste3"]
+}
